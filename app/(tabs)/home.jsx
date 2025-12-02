@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from 'expo-router';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text } from 'react-native';
 import Header from '../../components/Home/Header';
 import PetListByCategory from '../../components/Home/PetListByCategory';
 import Slider from '../../components/Home/Slider';
@@ -38,13 +38,16 @@ export default function Home() {
   };
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.key}
-      contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
-      showsVerticalScrollIndicator={false}
-    />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f9f9f9' }}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+
   );
 }
 

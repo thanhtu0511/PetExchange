@@ -2,6 +2,7 @@ import { useAuth, useUser } from '@clerk/clerk-expo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../../constants/Colors';
 export default function Profile() {
   const router = useRouter();
@@ -33,6 +34,12 @@ export default function Profile() {
       path: '/(tabs)/inbox',
     },
     {
+      id: 6,
+      name: 'Exchange Requests',  // <-- mới
+      icon: 'swap-horizontal',
+      path: '/user-exchange',     // <-- màn hình mới
+    },
+    {
       id: 4,
       name: 'Logout',
       icon: 'exit',
@@ -48,7 +55,8 @@ export default function Profile() {
     router.push(menu.path);
   };
   return (
-    <View
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
       style={{
         padding: 20,
         marginTop: 20,
@@ -99,6 +107,9 @@ export default function Profile() {
 
       <FlatList
         data={Menu}
+        contentContainerStyle={{
+          paddingBottom: 160, // tránh tab bar
+        }}
         renderItem={({ item, index }) => (
           <TouchableOpacity
             onPress={() => onPressMenu(item)}
@@ -135,5 +146,6 @@ export default function Profile() {
         )}
       />
     </View>
+    </SafeAreaView>
   );
 }

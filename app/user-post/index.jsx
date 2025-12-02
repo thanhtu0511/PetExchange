@@ -3,10 +3,10 @@ import { useNavigation, useRouter } from 'expo-router';
 import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Dimensions, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../Config/FirebaseConfig';
 import PetListItem from '../../components/Home/PetListItem';
 import Colors from '../../constants/Colors';
-
 export default function UserPost() {
   const navigation = useNavigation();
   const { user } = useUser();
@@ -18,7 +18,10 @@ export default function UserPost() {
   const pageSize = 4; // 2x2 grid
 
   const screenWidth = Dimensions.get('window').width;
-  const itemWidth = (screenWidth - 60) / 2; // padding container + gap
+  const containerPadding = 20; // SafeAreaView padding
+  const gap = 15; // khoảng cách giữa 2 cột
+  const itemWidth = (screenWidth - containerPadding * 2 - gap) / 2;
+
 
   // Function lấy bài đăng user
   const GetUserPost = useCallback(async () => {
@@ -66,8 +69,8 @@ export default function UserPost() {
   const totalPages = Math.ceil(userPostList.length / pageSize);
 
   return (
-    <View style={{ padding: 20, flex: 1 }}>
-      <Text style={{ fontFamily: 'outfit-medium', fontSize: 30, marginBottom: 20 }}>User Post</Text>
+    <SafeAreaView style={{ flex: 1}}>
+      <View style={{ padding: 20, flex: 1 }}>
 
       {loader && <Text>Loading...</Text>}
 
@@ -75,7 +78,7 @@ export default function UserPost() {
         data={dataToShow}
         numColumns={2}
         keyExtractor={(item) => item.id}
-        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 15 }}
+        columnWrapperStyle={{ justifyContent: 'flex-start', marginBottom: 15, gap: 15 }}
         renderItem={({ item }) => (
           <View style={{ width: itemWidth }}>
             <PetListItem pet={item} width={itemWidth} />
@@ -126,6 +129,8 @@ export default function UserPost() {
         </View>
       )}
     </View>
+    </SafeAreaView>
+    
   );
 }
 

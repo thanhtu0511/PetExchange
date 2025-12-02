@@ -42,16 +42,8 @@ jobs:
       # ==== Snyk ====
       - name: Snyk Security Scan
         uses: snyk/actions/node@master
-        with:
-          command: test
-          severity-threshold: high
-          json: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Upload Snyk report
-        uses: actions/upload-artifact@v4
         with:
-          name: snyk-report
-          path: snyk-report.json
-
+          command: test
+          args: --severity-threshold=high
