@@ -19,3 +19,36 @@ jobs:
       - run: gcloud info
       - run: gcloud config set project $PROJECT_ID
       - run: gcloud firestore export $BUCKET
+
+      - name: Send success email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "Firestore Backup Successful"
+          to: ${{ secrets.EMAIL_TO }}
+          from: "Firestore Backup <${{ secrets.EMAIL_USER }}>"
+          body: |
+            Firestore backup completed successfully.
+            Bucket: ${{ env.BUCKET }}
+            Project: ${{ env.PROJECT_ID }}
+            Time: ${{ github.event.schedule }}
+
+      - name: Send failure email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "❌ Firestore Backup Failed"
+          to: ${{ secrets.EMAIL_TO }}
+          from: "Firestore Backup <${{ secrets.EMAIL_USER }}>"
+          body: |
+            Backup FAILED ❌
+            Project: ${{ env.PROJECT_ID }}
+            Please check GitHub Actions logs.
