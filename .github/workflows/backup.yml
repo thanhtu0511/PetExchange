@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch: {}
+
 env:
   PROJECT_ID: pet-adopt-4150a
   BUCKET: gs://backup-petadopt-01
@@ -11,14 +12,21 @@ env:
 jobs:
   backup:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: google-github-actions/setup-gcloud@v2
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
       - run: gcloud info
       - run: gcloud config set project $PROJECT_ID
-      - run: gcloud firestore export $BUCKET
+
+      - name: Export Firestore
+        run: gcloud firestore export $BUCKET
 
       - name: Send success email
         if: success()
@@ -35,7 +43,7 @@ jobs:
             Firestore backup completed successfully.
             Bucket: ${{ env.BUCKET }}
             Project: ${{ env.PROJECT_ID }}
-            Time: ${{ github.event.schedule }}
+            Time: ${{ github.run_started_at }}
 
       - name: Send failure email
         if: failure()
@@ -51,4 +59,4 @@ jobs:
           body: |
             Backup FAILED ❌
             Project: ${{ env.PROJECT_ID }}
-            Please check GitHub Actions logs.
+            Check GitHub Actions logs.
