@@ -3,7 +3,7 @@ name: Backup Firestore
 on:
   schedule:
     - cron: '0 0 * * *'
-
+  workflow_dispatch: {}
 env:
   PROJECT_ID: pet-adopt-4150a
   BUCKET: gs://backup-petadopt-01
