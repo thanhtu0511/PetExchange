@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "FinalProject",
+    "name": "Pet Exchange",
     "slug": "FinalProject",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "finalproject",
+    "icon": "./assets/images/image.png",
+    "scheme": "PetExchange",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/image.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,

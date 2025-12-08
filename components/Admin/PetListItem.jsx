@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
-import Colors from '../../../constants/Colors';
+import Colors from '../../constants/Colors';
 
 const screenWidth = Dimensions.get('window').width;
 const itemWidth = (screenWidth - 50) / 2;

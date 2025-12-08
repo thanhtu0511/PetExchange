@@ -1,7 +1,7 @@
 // app/admin/AdminLogin.jsx
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useLayoutEffect, useState } from 'react';
 import {
@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth, db } from '../../Config/FirebaseConfig';
+import Colors from '../../constants/Colors';
 export default function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -58,7 +59,19 @@ export default function AdminLogin() {
       setLoading(false);
     }
   };
+  const handleForgotPassword = async () => {
+  if (!email) {
+    ToastAndroid.show('Enter your email first', ToastAndroid.SHORT);
+    return;
+  }
 
+  try {
+    await sendPasswordResetEmail(auth, email);
+    ToastAndroid.show('Password reset email sent!', ToastAndroid.SHORT);
+  } catch (err) {
+    ToastAndroid.show('Failed to send email: ' + err.message, ToastAndroid.SHORT);
+  }
+};
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <KeyboardAvoidingView
@@ -89,6 +102,16 @@ export default function AdminLogin() {
             <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
               <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Login'}</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleForgotPassword}
+              disabled={loading}
+              style={{ marginTop: 10 }}
+            >
+              <Text style={{ color: '#1E90FF', textAlign: 'center', fontWeight: 'bold' }}>
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+
           </View>
 
           {/* Hình minh họa phía dưới */}
@@ -134,6 +157,7 @@ const styles = StyleSheet.create({
     borderColor: '#b9c6d9',
     fontSize: 16,
     backgroundColor: '#F1F6FF',
+    placeholder: Colors.GRAY
   },
 
   button: {

@@ -2,8 +2,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -67,65 +66,67 @@ export default function AddNewAdmin() {
   };
 
   const uploadAndSave = async () => {
-    if (!username || !email || !password || !image) {
-      ToastAndroid.show('Please fill all fields and select an avatar', ToastAndroid.SHORT);
+  if (!username || !email || !password || !image) {
+    ToastAndroid.show("Please fill all fields", ToastAndroid.SHORT);
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    // 1. Upload Cloudinary
+    const formDataCloud = new FormData();
+    formDataCloud.append("file", {
+      uri: image,
+      type: "image/jpeg",
+      name: `Admin-${Date.now()}.jpg`,
+    });
+    formDataCloud.append("upload_preset", "PetAdopt");
+
+    const uploadResp = await fetch(
+      "https://api.cloudinary.com/v1_1/dkmgby3o9/image/upload",
+      { method: "POST", body: formDataCloud }
+    );
+    const uploadData = await uploadResp.json();
+
+    if (!uploadData.secure_url) {
+      ToastAndroid.show("Upload failed", ToastAndroid.SHORT);
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-
-    try {
-      // 1. Tạo user Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid;
-
-      // 2. Upload ảnh lên Cloudinary
-      const formDataCloud = new FormData();
-      formDataCloud.append('file', {
-        uri: image,
-        type: 'image/jpeg',
-        name: `Admin-${Date.now()}.jpg`,
-      });
-      formDataCloud.append('upload_preset', 'PetAdopt');
-
-      const uploadResp = await fetch('https://api.cloudinary.com/v1_1/dkmgby3o9/image/upload', {
-        method: 'POST',
-        body: formDataCloud,
-      });
-
-      const uploadData = await uploadResp.json();
-      if (!uploadData.secure_url) {
-        ToastAndroid.show('Upload failed', ToastAndroid.SHORT);
-        setLoading(false);
-        return;
+    // 2. Gửi sang SERVER
+    const serverResp = await fetch(
+      "https://ai-server-utim.onrender.com/add-admin",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          imageUrl: uploadData.secure_url,
+          dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+          role,
+          createdBy: auth.currentUser.email
+        }),
       }
+    );
 
-      // 3. Lưu thông tin admin vào Firestore
-      await setDoc(doc(db, 'Admin', uid), {
-        uid,
-        username,
-        email,
-        imageUrl: uploadData.secure_url,
-        dateofbirth: dateOfBirth.toISOString().split('T')[0],
-        role,
-      });
+    const result = await serverResp.json();
 
-      ToastAndroid.show('Admin added successfully', ToastAndroid.SHORT);
-
-      // Reset form
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setImage(null);
-      setDateOfBirth(new Date());
-      setRole('admin');
-    } catch (err) {
-      console.error(err);
-      ToastAndroid.show('Error: ' + err.message, ToastAndroid.SHORT);
-    } finally {
-      setLoading(false);
+    if (!result.success) {
+      ToastAndroid.show("Server error: " + result.error, ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show("Admin added successfully", ToastAndroid.SHORT);
     }
-  };
+  } catch (err) {
+    ToastAndroid.show("Error: " + err.message, ToastAndroid.SHORT);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <SafeAreaView style={{ flex: 1, padding: 20, paddingBottom: insets.bottom }}>
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
     marginBottom: 15,
   },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 10, marginBottom: 15 },
+  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 10, marginBottom: 15, placeholder: Colors.GRAY },
   button: { padding: 15, backgroundColor: Colors.PRIMARY, borderRadius: 10 },
   buttonText: { color: '#fff', fontFamily: 'outfit-medium', textAlign: 'center' },
 });

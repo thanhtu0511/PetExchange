@@ -114,6 +114,7 @@ export default function AddNewPet() {
             handleInputChange('category', '');
             return;
           }
+          console.log('Before handleInputChange:', classifyData.category);
           handleInputChange('category', classifyData.category);
         } else {
           ToastAndroid.show('Upload failed for AI classification', ToastAndroid.SHORT);
@@ -173,6 +174,7 @@ export default function AddNewPet() {
           email: user?.primaryEmailAddress?.emailAddress,
           userImage: user?.imageUrl,
           id: docId,
+          exchangeStatus:"pendingApproval"
         });
 
         ToastAndroid.show('Pet added successfully!', ToastAndroid.SHORT);
@@ -335,6 +337,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     fontFamily: 'outfit',
     marginTop: 5,
+    color: Colors.GRAY,
   },
   label: { fontFamily: 'outfit' },
   button: { padding: 15, backgroundColor: Colors.PRIMARY, borderRadius: 7, marginVertical: 10 },

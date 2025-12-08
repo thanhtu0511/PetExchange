@@ -7,6 +7,7 @@ import { ActivityIndicator, Keyboard, Platform, StyleSheet, View } from 'react-n
 import { GiftedChat } from 'react-native-gifted-chat';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../Config/FirebaseConfig';
+import Colors from '../../constants/Colors';
 
 export default function AIChatScreen() {
   const navigation = useNavigation();
@@ -115,5 +116,5 @@ export default function AIChatScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#fff' },
   container: { flex: 1 },
-  input: { backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 10 },
+  input: { backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 10 ,placeholderTextColor: Colors.GRAY},
 });

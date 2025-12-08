@@ -133,9 +133,9 @@ export default function PetDetails() {
   /** STATUS LABEL */
   const RenderStatus = () => {
     const s = pet?.exchangeStatus;
-    let label = '⭕ Available';
+    let label = 'Pending Approval';
     let color = '#15a300';
-
+    if (s === 'available') { label = '⭕ Available'; color = '#15a300'; }
     if (s === 'pending') { label = '🟡 Waiting for exchange'; color = '#d5a100'; }
     if (s === 'completed') { label = '🟢 Successfully exchanged'; color = '#0a8a00'; }
 

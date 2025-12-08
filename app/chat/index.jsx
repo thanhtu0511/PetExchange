@@ -7,6 +7,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../Config/FirebaseConfig';
+import Colors from '../../constants/Colors';
 
 export default function ChatScreen() {
   const params = useLocalSearchParams();
@@ -99,5 +100,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 10,
+    placeholderTextColor:Colors.GRAY,
   },
 });

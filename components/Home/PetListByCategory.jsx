@@ -21,7 +21,12 @@ export default function PetListByCategory() {
     const q = query(collection(db, 'Pets'), where('category', '==', category));
     const querySnapshot = await getDocs(q);
     const pets = [];
-    querySnapshot.forEach((doc) => pets.push(doc.data()));
+    querySnapshot.forEach((doc) => {
+    const d = doc.data();
+      if (d.exchangeStatus === "available" || d.exchangeStatus === "pending") {
+        pets.push(d);
+      }
+    });
     setPetList(pets);
     setPage(1);
     setLoader(false);

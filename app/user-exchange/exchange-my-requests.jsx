@@ -45,7 +45,6 @@ export default function ExchangeMyRequests() {
           const petSnap = await getDoc(doc(db, "Pets", data.petId));
           const pet = petSnap.data();
 
-          // ❗ Chỉ lấy PET mà user hiện tại KHÔNG phải chủ pet
           if (pet.exchangeStatus === "completed" || pet.email === userEmail) return null;
 
           return {
@@ -57,7 +56,7 @@ export default function ExchangeMyRequests() {
         })
       );
 
-      setPetList(merged.filter(Boolean)); // loại bỏ null
+      setPetList(merged.filter(Boolean));
     } catch (e) {
       console.log("Load My Requests Error:", e);
     }

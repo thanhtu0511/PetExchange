@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Colors from '../../constants/Colors';
 
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     height: 45,
     paddingHorizontal: 12,
     fontFamily: 'outfit-regular',
+    placeholderTextColor: Colors.GRAY,
   },
   clearBtn: {
     backgroundColor: Colors.LIGHT_PRIMARY,
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 10,
     fontFamily: 'outfit-regular',
+    color: Colors.GRAY,
   },
   sortBtn: {
     backgroundColor: Colors.LIGHT_PRIMARY,
