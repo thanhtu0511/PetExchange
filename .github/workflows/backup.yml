@@ -2,8 +2,7 @@ name: Backup Firestore
 
 on:
   schedule:
-    # Chạy mỗi ngày lúc 00:00 UTC (tức 07:00 sáng Việt Nam)
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *"   # Backup lúc 07:00 sáng VN
   workflow_dispatch: {}
 
 env:
@@ -21,6 +20,10 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ env.PROJECT_ID }}
           export_default_credentials: true
+
+      - name: Activate service account
+        run: |
+          gcloud auth activate-service-account --key-file="$GOOGLE_GHA_CREDS_PATH"
 
       - name: Show gcloud info
         run: gcloud info
