@@ -39,7 +39,7 @@
     "expo-web-browser": "~14.1.6",
     "firebase": "^11.10.0",
     "moment": "^2.30.1",
-    "react": "19.0.0",
+    "react": "19.2.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
     "react-native-chat-ui": "^0.1.9",
